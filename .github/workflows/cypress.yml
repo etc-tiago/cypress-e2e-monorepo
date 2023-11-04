@@ -4,7 +4,7 @@ on: push
 
 jobs:
   single:
-    runs-on: latest
+    runs-on: ubuntu-latest
     steps:
       - uses: szenius/set-timezone@v1.2
         with:
