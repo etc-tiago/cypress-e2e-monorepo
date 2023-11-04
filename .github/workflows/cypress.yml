@@ -29,17 +29,10 @@ jobs:
         env:
           NODE_ENV: "production"
 
-      - name: Install dependencies
-        uses: cypress-io/github-action@v6
-        with:
-          # just perform install
-          runTests: false
-
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          install: false
-          working-directory: packags/pkg-01
+          working-directory: packages/pkg-01
           start: pnpm --filter=pkg-01 start
           wait-on: "http://localhost:3000"
           parallel: false
