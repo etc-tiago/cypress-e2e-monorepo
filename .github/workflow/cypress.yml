@@ -1,0 +1,43 @@
+name: example-start-and-pnpm-workspaces
+
+on: push
+
+jobs:
+  single:
+    runs-on: latest
+    steps:
+      - uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: "America/Sao_Paulo"
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 10
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          check-latest: true
+          cache: "pnpm"
+
+      - run: pnpm install
+      - run: pnpm --filter=pkg-01 build
+        env:
+          NODE_ENV: "production"
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: packags/pkg-01
+          start: pnpm start
+          wait-on: "http://localhost:3000"
+          record: true
+          parallel: false
+          browser: "chrome"
+        env:
+          CYPRESS_RECORD_KEY: "${{ secrets.CYPRESS_RECORD_KEY }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
